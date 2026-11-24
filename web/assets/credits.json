@@ -1,0 +1,22 @@
+{
+  "photo": {
+    "file": "private-cinema-bg.jpg",
+    "source": "https://hometheatersco.com/home-theater-seating/",
+    "provider": "Sound Investments",
+    "copyright": "Direitos reservados",
+    "context": "Foto de referência para o protótipo acadêmico",
+    "permission": "Autorização de redistribuição não verificada"
+  },
+  "textures": [
+    {
+      "name": "Brown Leather",
+      "source": "https://polyhaven.com/a/brown_leather",
+      "license": "CC0"
+    },
+    {
+      "name": "Wood Table 001",
+      "source": "https://polyhaven.com/a/wood_table_001",
+      "license": "CC0"
+    }
+  ]
+}

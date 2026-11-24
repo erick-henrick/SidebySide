@@ -1,0 +1,5 @@
+FROM ghcr.io/m1k1o/neko/chromium:3.1.5
+COPY browser/inspect-browser.py browser/control-server.py /opt/cinema/
+COPY browser/neko-policy.json /etc/chromium/policies/managed/policies.json
+RUN sed -i 's#command=/usr/bin/chromium#command=/usr/bin/chromium --remote-debugging-port=9222#' /etc/neko/supervisord/chromium.conf
+COPY browser/cinema-control.conf /etc/neko/supervisord/cinema-control.conf

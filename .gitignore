@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+*.log
+*.pid
+*.secret
+cinema-session.json
+playback-errors.jsonl
+__pycache__/

@@ -1,0 +1,55 @@
+html { scroll-behavior: smooth; }
+.home-page { --home-gutter: clamp(22px,5vw,76px); max-width: 1380px; margin: auto; padding: 0 var(--home-gutter); }
+.brand-vr { font-size: .75rem; letter-spacing: .06em; color: var(--muted); border: 1px solid var(--line); padding: 3px 5px; border-radius: 4px; margin-left: 2px; }
+.home-hero { position: relative; isolation: isolate; margin-inline: calc(-1 * var(--home-gutter)); padding: 84px var(--home-gutter) 88px; }
+.hero-background { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #101014; }
+.hero-background img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 59%; opacity: .82; filter: brightness(.52) saturate(.55); }
+.hero-background::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,#101014f5 0%,#101014db 28%,#1010147d 55%,#10101433 100%),linear-gradient(0deg,#101014 0%,#10101400 34%,#10101426 78%,#101014ad 100%); }
+.hero-copy { min-width: 0; max-width: 630px; }
+.hero-copy h1 { font-size: clamp(3rem,6vw,5rem); font-weight: 540; letter-spacing: -.055em; line-height: 1.06; margin: 23px 0; }
+.hero-description { max-width: 590px; font-size: 1.125rem; line-height: 1.7; color: #d0ccd8; margin: 0 0 27px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-actions .button { min-height: 48px; }
+.hero-note { display: flex; gap: 8px; align-items: center; color: #b6b0c0; font-size: .8125rem; line-height: 1.6; margin-top: 22px; }
+.hero-note .icon { width: 16px; height: 16px; flex-shrink: 0; }
+.hero-credit { position: absolute; right: var(--home-gutter); bottom: 20px; color: #a8a3b0; font-size: .75rem; line-height: 1.6; }
+.hero-credit:hover { color: white; }
+.experience { scroll-margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 70px; border-top: 1px solid var(--line); padding: 75px 0; }
+.section-heading h2 { font-size: clamp(2.2rem,4vw,3.6rem); font-weight: 500; letter-spacing: -.055em; line-height: 1.08; margin: 22px 0; }
+.section-heading>p:last-child { font-size: 1rem; line-height: 1.75; color: var(--muted); max-width: 350px; }
+.experience-details article { display: flex; gap: 22px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.experience-details article:first-child { padding-top: 2px; }
+.experience-details article:last-child { border: 0; padding-bottom: 0; }
+.experience-details article>.icon { color: var(--accent); width: 23px; height: 23px; margin-top: 3px; flex-shrink: 0; }
+.experience-details h3,.how-steps h3 { font-size: 1rem; font-weight: 550; letter-spacing: -.015em; margin-bottom: 9px; }
+.experience-details p,.how-steps p { color: var(--muted); font-size: 1rem; line-height: 1.7; }
+.how-it-works { scroll-margin-top: 32px; border-top: 1px solid var(--line); padding: 64px 0 70px; }
+.how-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.how-header h2 { font-size: clamp(1.6rem,3vw,2.35rem); letter-spacing: -.045em; font-weight: 500; margin-top: 15px; }
+.how-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 44px; margin-top: 43px; }
+.how-steps article { padding-top: 22px; border-top: 1px solid #ffffff23; }
+.how-steps p { max-width: 30ch; }
+.site-footer .brand { font-size: .9rem; }
+.site-footer .brand-mark { transform: scale(.8); transform-origin: left center; margin-right: -4px; }
+@media (max-width: 900px) {
+  .home-hero { padding-block: 65px 80px; }
+  .experience { gap: 45px; }
+  .how-steps { gap: 25px; }
+}
+@media (max-width: 650px) {
+  .home-hero { padding-block: 48px 76px; }
+  .hero-background img { object-position: 60% 50%; }
+  .hero-background::after { background: linear-gradient(90deg,#101014d9,#101014a3),linear-gradient(0deg,#101014 0%,#10101400 40%,#10101466 100%); }
+  .hero-copy h1 { font-size: clamp(2.9rem,12vw,4rem); margin: 20px 0; }
+  .hero-description { font-size: 1rem; margin-bottom: 24px; }
+  .hero-actions { gap: 6px; }
+  .hero-actions .quiet { padding-left: 0; }
+  .experience { grid-template-columns: 1fr; padding: 45px 0; gap: 30px; }
+  .section-heading h2 br { display: none; }
+  .section-heading h2 { font-size: 2.4rem; }
+  .section-heading>p:last-child { max-width: 100%; }
+  .how-it-works { padding: 42px 0; }
+  .how-header { align-items: flex-start; flex-direction: column; }
+  .how-steps { grid-template-columns: 1fr; gap: 25px; margin-top: 35px; }
+  .how-steps p { max-width: 100%; }
+}

@@ -1,0 +1,34 @@
+.cinema-controls-button {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 3;
+  padding: 9px 13px;
+  border: 1px solid #ffffff20;
+  border-radius: 7px;
+  color: #ddd6e9;
+  background: #19171ed9;
+  font: 500 .75rem Inter,system-ui,sans-serif;
+  backdrop-filter: blur(10px);
+}
+.cinema-stage[data-cardboard] .cinema-controls-button,
+.cinema-stage[data-cardboard] .fullscreen-button,
+.cinema-stage[data-cardboard] .connection-indicator,
+.cinema-stage[data-cardboard] .seat-preview { display: none; }
+.cinema-stage[data-cinema-controls] .seat-preview { display: none; }
+.cinema-stage[data-cardboard] .a-canvas { touch-action: none; }
+body:has(.cinema-stage[data-cardboard]) { overflow: hidden; }
+.cinema-stage[data-cardboard] {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 30;
+  border: 0;
+  border-radius: 0;
+}
+.cinema-stage[data-cardboard] .scene {
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+}

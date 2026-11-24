@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    restart: unless-stopped
+    expose:
+      - "3114"
+    environment:
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Configure a URL HTTPS da sala}
+      NEKO_HTTP_HOST: browser
+      NEKO_HTTP_PORT: "8080"
+      NEKO_CONTROL_URL: http://browser:8765
+      CONTROL_TOKEN: ${CONTROL_TOKEN:?Configure o token interno}
+      NEKO_USER_PASSWORD: ${VIEWER_PASSWORD:?Configure a senha do visitante}
+    volumes:
+      - cinema-data:/data
+    depends_on:
+      browser:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3114/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  browser:
+    build:
+      context: .
+      dockerfile: Dockerfile.browser
+    restart: unless-stopped
+    shm_size: 1gb
+    ports:
+      - "60200-60219:60200-60219/udp"
+    environment:
+      CONTROL_TOKEN: ${CONTROL_TOKEN:?Configure o token interno}
+      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: ${VIEWER_PASSWORD:?Configure a senha do visitante}
+      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Configure a senha administrativa}
+      NEKO_WEBRTC_EPR: 60200-60219
+      NEKO_WEBRTC_NAT1TO1: ${MEDIA_ADDRESS:?Configure o IPv4 público da VM}
+      NEKO_WEBRTC_ICELITE: "false"
+      NEKO_WEBRTC_ICESERVERS_FRONTEND: ${ICE_SERVERS:-[]}
+      NEKO_WEBRTC_ICESERVERS_BACKEND: ${ICE_SERVERS:-[]}
+      NEKO_DESKTOP_SCREEN: 1280x720@24
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/health',timeout=3)"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  cinema-data:

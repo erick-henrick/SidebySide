@@ -1,0 +1,31 @@
+:root {
+  color-scheme: dark;
+  font-family: Geist, system-ui, sans-serif;
+  background: #151326;
+  color: #f6f3ff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { width: min(52rem, 100%); margin: auto; padding: 2rem 1.25rem 4rem; }
+.home-link { display: inline-block; color: #d5c2ff; margin-bottom: .8rem; }
+#sala-compartilhada, #telao { scroll-margin-top: 1.25rem; }
+h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.5rem); }
+h2 { margin: 0 0 1rem; font-size: 1.4rem; }
+p { color: #d4cbe6; }
+section { margin-top: 1.5rem; padding: 1.25rem; border: 1px solid #50416d; border-radius: 1rem; background: #211b35; }
+label { display: block; margin-bottom: .5rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: .65rem; }
+button, input { font: inherit; }
+button { border: 0; border-radius: .5rem; padding: .65rem .85rem; background: #d5c2ff; color: #211631; cursor: pointer; }
+button:disabled { opacity: .55; cursor: default; }
+input[type=url], input[type=text] { flex: 1 1 16rem; min-width: 0; padding: .65rem; border: 1px solid #786497; border-radius: .5rem; background: #151326; }
+input[type=file] { max-width: 100%; }
+:focus-visible { outline: 2px solid #d5c2ff; outline-offset: 3px; }
+iframe { width: 100%; min-height: 200px; aspect-ratio: 16 / 9; border: 0; }
+#cast-player-area { isolation: isolate; background: #000; }
+#cast-player { display: block; }
+a-scene[embedded] { height: 100%; width: 100%; }
+
+[hidden] { display: none !important; }
+.playback-actions:has(button:not([hidden])) { margin-bottom: .75rem; }
+.playback-actions:not(:has(button:not([hidden]))) { display: none; }
