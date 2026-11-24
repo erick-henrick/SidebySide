@@ -1,43 +1,83 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Seu cinema privado para assistir ao YouTube com os amigos, no navegador e em realidade virtual.">
-  <meta name="theme-color" content="#101014"><title>Side by Side — Cinema em realidade virtual</title>
-  <link rel="stylesheet" href="/design.css"><link rel="stylesheet" href="/home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Cinema virtual para assistir a vídeos do YouTube com amigos, com seis poltronas e uma fila compartilhada.">
+  <meta name="theme-color" content="#101014">
+  <title>Side by Side — Cinema em realidade virtual</title>
+  <link rel="stylesheet" href="/design.css">
+  <link rel="stylesheet" href="/home.css">
 </head>
 <body>
   <div class="home-page">
-    <header class="site-nav">
-      <a class="brand" href="/" aria-label="Side by Side, início"><span class="brand-mark" aria-hidden="true"></span>side by side<span class="brand-vr">VR</span></a>
-      <nav aria-label="Navegação principal"><a class="nav-link" href="#experiencia">A experiência</a><a class="nav-link" href="#como-funciona">Como funciona</a><a class="button small" href="/cinema">Entrar na sala</a></nav>
+    <header class="home-header">
+      <a class="brand" href="/" aria-label="Side by Side, início"><span class="brand-mark" aria-hidden="true"></span>side by side</a>
+      <nav class="home-nav" aria-label="Navegação principal">
+        <a class="home-nav-link" href="#experiencia">A experiência</a>
+        <a class="home-nav-link" href="#como-funciona">Como funciona</a>
+        <a class="home-button home-button--outline" href="/cinema">Entrar na sala</a>
+      </nav>
     </header>
+
     <main>
       <section class="home-hero" aria-labelledby="hero-title">
-        <div class="hero-background" aria-hidden="true"><img src="/assets/private-cinema-bg.jpg" width="1600" height="1044" alt="" fetchpriority="high"></div>
+        <div class="hero-background" aria-hidden="true">
+          <img src="/assets/private-cinema-bg.jpg" width="1600" height="1044" alt="" fetchpriority="high">
+        </div>
         <div class="hero-copy">
           <p class="eyebrow">Cinema em realidade virtual</p>
           <h1 id="hero-title">Side by Side</h1>
-          <p class="hero-description">Uma sala privada de seis lugares para assistir a vídeos do YouTube com amigos. Escolham o que ver e acompanhem a mesma sessão, com uma fila compartilhada.</p>
-          <div class="hero-actions"><a class="button primary" href="/cinema"><svg class="icon" aria-hidden="true"><use href="/icons.svg#play"/></svg>Entrar no cinema</a><a class="button quiet" href="#experiencia">Conhecer a experiência</a></div>
-          <p class="hero-note"><svg class="icon" aria-hidden="true"><use href="/icons.svg#monitor"/></svg>No computador ou no celular com Cardboard.</p>
-        </div>
-        <a class="hero-credit" href="https://hometheatersco.com/home-theater-seating/" target="_blank" rel="noopener">Foto de referência · Sound Investments</a>
-      </section>
-      <section class="experience" id="experiencia" aria-labelledby="experience-title">
-        <div class="section-heading"><p class="eyebrow">A experiência</p><h2 id="experience-title">O vídeo é só<br>o começo.</h2><p>O campeonato, aquele vídeo que rende assunto ou a playlist da noite. O melhor é ter com quem dividir.</p></div>
-        <div class="experience-details">
-          <article><svg class="icon" aria-hidden="true"><use href="/icons.svg#screen"/></svg><div><h3>Um cinema só de vocês</h3><p>Escolha sua poltrona em uma sala de seis lugares, com luz baixa e espaço para se acomodar.</p></div></article>
-          <article><svg class="icon" aria-hidden="true"><use href="/icons.svg#queue"/></svg><div><h3>Cada um escolhe o próximo</h3><p>Encontre vídeos do YouTube e monte uma fila compartilhada para a sessão continuar.</p></div></article>
-          <article><svg class="icon" aria-hidden="true"><use href="/icons.svg#headset"/></svg><div><h3>Do navegador para a sala</h3><p>Explore pelo computador ou entre no modo VR com o celular. Os controles acompanham você no cinema.</p></div></article>
+          <p class="hero-description">Assista ao YouTube com amigos em um cinema virtual de seis lugares, com telão e fila compartilhados.</p>
+          <div class="hero-actions">
+            <a class="home-button home-button--primary" href="/cinema">
+              <svg class="icon" aria-hidden="true"><use href="/icons.svg#play"/></svg>
+              Entrar no cinema
+            </a>
+            <a class="home-button home-button--text" href="#experiencia">A experiência</a>
+          </div>
         </div>
       </section>
-      <section class="how-it-works" id="como-funciona" aria-labelledby="how-title">
-        <div class="how-header"><div><p class="eyebrow">Sem complicar</p><h2 id="how-title">A próxima sessão começa aqui.</h2></div><a class="button primary" href="/cinema">Abrir o cinema</a></div>
-        <div class="how-steps"><article><h3>Entre na sala</h3><p>Abra o cinema e compartilhe o link com quem vai assistir.</p></article><article><h3>Escolham o que ver</h3><p>Pesquise no YouTube ou cole um link para adicionar à fila.</p></article><article><h3>Encontre seu lugar</h3><p>Acomode-se na poltrona, ajuste seu volume e aproveite a companhia.</p></article></div>
+
+      <section class="home-section" id="experiencia" aria-labelledby="experience-title">
+        <h2 id="experience-title">Dentro da sala</h2>
+        <div class="experience-grid">
+          <article>
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#screen"/></svg>
+            <h3>Reprodução compartilhada</h3>
+            <p>Quando alguém pausa ou avança, o telão muda para todo mundo.</p>
+          </article>
+          <article>
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#queue"/></svg>
+            <h3>Fila do grupo</h3>
+            <p>Pesquise no YouTube, organize a ordem dos vídeos ou volte a um que já passou.</p>
+          </article>
+          <article>
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#seat"/></svg>
+            <h3>Seu lugar e seus ajustes</h3>
+            <p>Troque de poltrona e ajuste a luz e o volume só para você.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="home-section home-guide" id="como-funciona" aria-labelledby="guide-title">
+        <div class="guide-heading">
+          <h2 id="guide-title">Como começar</h2>
+          <a class="home-button home-button--outline" href="/cinema">Abrir o cinema</a>
+        </div>
+        <ol class="guide-steps">
+          <li><h3>Convide os amigos</h3><p>Abra o cinema e compartilhe o endereço da sala.</p></li>
+          <li><h3>Escolham um vídeo</h3><p>Pesquise pelo nome ou cole um link do YouTube.</p></li>
+          <li><h3>Escolha como assistir</h3><p>No computador, arraste a cena para olhar ao redor. No Cardboard, abra o modo VR e selecione os controles com o olhar.</p></li>
+        </ol>
       </section>
     </main>
-    <footer class="site-footer"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>side by side</a><span>Um projeto feito para aproximar.</span><a href="/cinema">Nos vemos no cinema.</a></footer>
+
+    <footer class="home-footer">
+      <a class="brand" href="/" aria-label="Side by Side, início"><span class="brand-mark" aria-hidden="true"></span>side by side</a>
+      <p>Projeto acadêmico de Realidade Virtual</p>
+      <a class="photo-credit" href="https://hometheatersco.com/home-theater-seating/" target="_blank" rel="noopener">Foto de referência · Sound Investments</a>
+    </footer>
   </div>
 </body>
 </html>

@@ -246,7 +246,6 @@ const localFiles = new Map([
   ['/cast-viewer.js', ['cast-viewer.js', 'text/javascript']],
   ['/cast-common.js', ['cast-common.js', 'text/javascript']],
   ['/cinema.css', ['cinema.css', 'text/css']],
-  ['/style.css', ['style.css', 'text/css']],
   ['/home.css', ['home.css', 'text/css']],
   ['/design.css', ['design.css', 'text/css']],
   ['/icons.svg', ['icons.svg', 'image/svg+xml']],
