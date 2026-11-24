@@ -1,3 +1,9 @@
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   --home-ease-out: cubic-bezier(.23, 1, .32, 1);
   --home-gutter: clamp(1.25rem, 5vw, 5rem);
