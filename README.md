@@ -64,7 +64,7 @@ Você precisa do **Docker com contêineres Linux** e do **Docker Compose 2.24.4 
 
 1. Crie uma aplicação com **Docker Compose** apontando para a branch `main`. Use `/` como diretório base e `/compose.yaml` como caminho do arquivo.
 2. Configure um domínio HTTPS no serviço `app`, apontando para a porta interna `3114`.
-3. Nas variáveis do Coolify, ajuste `PUBLIC_ORIGIN` para o endereço HTTPS que o visitante abre no navegador e `MEDIA_ADDRESS` para o IPv4 público da VM. Preencha também o token e as senhas conforme o [arquivo de exemplo](.env.example).
+3. Nas variáveis do Coolify, ajuste `PUBLIC_ORIGIN` para o endereço HTTPS que o visitante abre no navegador e `MEDIA_ADDRESS` para o IPv4 público da VM. Mantenha `ICE_SERVERS=[]` para o primeiro teste. O Coolify gera o token e as duas senhas a partir das referências `SERVICE_PASSWORD_64_*` do Compose.
 4. Libere as portas TCP `80` e `443` para o proxy e UDP `60200–60219` para a mídia. Faça o deploy e teste o telão e o som em dois dispositivos.
 
 Para detalhes de rede e configuração, veja o [guia de deploy](LEIA-ME.md). Os créditos da foto e das texturas estão em [`web/assets/credits.json`](web/assets/credits.json).
