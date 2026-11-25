@@ -49,5 +49,20 @@ services:
       timeout: 5s
       retries: 12
 
+  tailscale:
+    image: tailscale/tailscale@sha256:72c1e19e0aedca96b8533bbb0b4368564410ff20b17e53b804eb6c1f04a31be4
+    restart: unless-stopped
+    environment:
+      TS_HOSTNAME: side-by-side-coolify
+      TS_USERSPACE: "true"
+      TS_AUTH_ONCE: "true"
+      TS_BOOT_TIMEOUT: 15m
+      TS_ACCEPT_DNS: "false"
+      TS_SOCKS5_SERVER: 127.0.0.1:1055
+      TS_STATE_DIR: /var/lib/tailscale
+    volumes:
+      - tailscale-state:/var/lib/tailscale
+
 volumes:
   cinema-data:
+  tailscale-state:
