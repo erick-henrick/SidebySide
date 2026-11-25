@@ -193,20 +193,22 @@ async function expandCinema() {
   const result = await evaluateCinema('window.sideBySideCinema.expand()', true);
   if (!result.fullscreen) throw new Error('Não foi possível ajustar o vídeo ao telão.');
 }
+class YouTubeLoginRequired extends Error {
+  constructor() {
+    super('O YouTube exigiu login no navegador do servidor para liberar este vídeo.');
+  }
+}
+
 async function waitForVideo(expectedVideoId, timeout = 25000, contentOnly = false) {
   const deadline = Date.now() + timeout;
-  let ready = false;
   while (Date.now() < deadline) {
-    try {
-      ready = await evaluateCinema('window.sideBySideCinema.ready(' + JSON.stringify(expectedVideoId || '') +
-        ',' + contentOnly + ')');
-    } catch {
-      ready = false;
-    }
-    if (ready) break;
+    const playback = await evaluateCinema('window.sideBySideCinema.readiness(' +
+      JSON.stringify(expectedVideoId || '') + ',' + contentOnly + ')').catch(() => null);
+    if (playback?.loginRequired) throw new YouTubeLoginRequired();
+    if (playback?.ready) return;
     await wait(400);
   }
-  if (!ready) throw new Error('O YouTube ainda não carregou o vídeo. Tente Ajustar telão.');
+  throw new Error('O YouTube ainda não carregou o vídeo. Tente Ajustar telão.');
 }
 async function prepareCinema(expectedVideoId) {
   const deadline = Date.now() + 25000;
@@ -427,7 +429,7 @@ const server = createServer(async (req, res) => {
   } catch (error) {
     console.error(error.message);
     if (url.pathname === '/remote-control') setNotice(error.message);
-    if (!res.headersSent) res.writeHead(500);
+    if (!res.headersSent) res.writeHead(error instanceof YouTubeLoginRequired ? 422 : 500);
     res.end(error.message || 'Falha no teste local.');
   }
 });

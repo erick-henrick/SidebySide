@@ -1,5 +1,5 @@
 (() => {
-  if (window.sideBySideCinema?.version === 10) return;
+  if (window.sideBySideCinema?.version === 11) return;
   const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
   function isAdPlaying(player) {
     return Boolean(player?.classList.contains('ad-showing') ||
@@ -44,15 +44,19 @@
   }
 
   window.sideBySideCinema = {
-    version: 10,
-    ready(expectedVideoId, contentOnly = false) {
+    version: 11,
+    readiness(expectedVideoId, contentOnly = false) {
+      const requestedId = new URL(location.href).searchParams.get('v');
+      if (expectedVideoId && requestedId !== expectedVideoId) return { ready: false };
       const player = document.querySelector('#movie_player');
+      const response = player?.getPlayerResponse?.() || window.ytInitialPlayerResponse;
+      if (requestedId && response?.playabilityStatus?.status === 'LOGIN_REQUIRED') {
+        return { ready: false, loginRequired: true };
+      }
       const video = player?.querySelector('video');
-      const matches = !expectedVideoId ||
-        (new URL(location.href).searchParams.get('v') === expectedVideoId &&
-          player?.getVideoData?.().video_id === expectedVideoId);
+      const matches = !expectedVideoId || player?.getVideoData?.()?.video_id === expectedVideoId;
       const contentReady = !contentOnly || (!isAdPlaying(player) && player?.getPlayerState?.() !== -1);
-      return Boolean(matches && contentReady && player && video && video.readyState >= 2);
+      return { ready: Boolean(matches && contentReady && video && video.readyState >= 2) };
     },
     async prepare() {
       const player = document.querySelector('#movie_player');
