@@ -1,4 +1,21 @@
+FROM golang:1.25-trixie AS neko-build
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libx11-dev libxrandr-dev libxtst-dev libgtk-3-dev libxcvt-dev \
+    libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ADD https://codeload.github.com/m1k1o/neko/tar.gz/395ca1a6f62b7b0e270e654d366a2d57b8042efd /tmp/neko.tar.gz
+WORKDIR /src
+RUN tar -xzf /tmp/neko.tar.gz --strip-components=1
+
+# Mantém o cliente do Neko 3.1.5 e corrige os candidatos TURN por TCP/TLS.
+WORKDIR /src/server
+RUN go get github.com/pion/ice/v4@v4.2.4 \
+    && GIT_COMMIT=395ca1a GIT_TAG=v3.1.5 ./build core
+
 FROM ghcr.io/m1k1o/neko/chromium:3.1.5
+COPY --from=neko-build /src/server/bin/neko /usr/bin/neko
 COPY browser/inspect-browser.py browser/control-server.py /opt/cinema/
 COPY browser/neko-policy.json /etc/chromium/policies/managed/policies.json
 RUN sed -i 's#command=/usr/bin/chromium#command=/usr/bin/chromium --remote-debugging-port=9222#' /etc/neko/supervisord/chromium.conf
