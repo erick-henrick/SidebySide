@@ -21,7 +21,9 @@ try {
 }
 const container = process.env.NEKO_CONTAINER || runtime.container || 'side-by-side-neko-qa';
 const nekoPort = Number(process.env.NEKO_HTTP_PORT || runtime.httpPort || 8097);
-const nekoHost = process.env.NEKO_HTTP_HOST || '127.0.0.1';
+const useTailnet = Boolean(process.env.NEKO_TAILNET_IP);
+const nekoHost = useTailnet ? 'tailscale' : (process.env.NEKO_HTTP_HOST || '127.0.0.1');
+const nekoControlUrl = useTailnet ? 'http://tailscale:8765' : process.env.NEKO_CONTROL_URL;
 const appPort = Number(process.env.PORT || 3114);
 const appOrigin = new URL(process.env.PUBLIC_ORIGIN || 'http://127.0.0.1:' + appPort).origin;
 const listenHost = process.env.HOST || '127.0.0.1';
@@ -43,8 +45,8 @@ const playbackKeys = new Map([
 let controlling = false;
 async function remoteCommand(method, params) {
   let result;
-  if (process.env.NEKO_CONTROL_URL) {
-    const response = await fetch(process.env.NEKO_CONTROL_URL + '/command', {
+  if (nekoControlUrl) {
+    const response = await fetch(nekoControlUrl + '/command', {
       method: 'POST', headers: {
         'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.CONTROL_TOKEN,
       },

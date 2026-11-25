@@ -68,3 +68,9 @@ Você precisa do **Docker com contêineres Linux** e do **Docker Compose 2.24.4 
 4. Libere as portas TCP `80` e `443` para o proxy e UDP `60200–60219` para a mídia. Faça o deploy e teste o telão e o som em dois dispositivos.
 
 Para detalhes de rede e configuração, veja o [guia de deploy](LEIA-ME.md). Os créditos da foto e das texturas estão em [`web/assets/credits.json`](web/assets/credits.json).
+
+### Neko em outro computador
+
+Mantenha o Neko e seu serviço de controle acessíveis dentro do Tailscale nas portas TCP `8080` e `8765`. O Neko remoto precisa usar a mesma senha de visitante e o mesmo token de controle do app no Coolify. Configure também a mídia no Neko remoto, com UDP acessível ao público ou TURN para redes que bloqueiam a conexão direta.
+
+No Coolify, defina `NEKO_TAILNET_IP` com o IPv4 do Neko no Tailscale e deixe o deploy carregar a alteração. O site e a fila continuam no Coolify. Para voltar ao Neko do próprio deploy, limpe essa variável e faça o redeploy.

@@ -9,6 +9,7 @@ services:
     environment:
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Configure a URL HTTPS da sala}
       NEKO_HTTP_HOST: browser
+      NEKO_TAILNET_IP: ${NEKO_TAILNET_IP:-}
       NEKO_HTTP_PORT: "8080"
       NEKO_CONTROL_URL: http://browser:8765
       CONTROL_TOKEN: ${CONTROL_TOKEN:-${SERVICE_PASSWORD_64_CINEMACONTROL}}
@@ -50,9 +51,12 @@ services:
       retries: 12
 
   tailscale:
-    image: tailscale/tailscale@sha256:72c1e19e0aedca96b8533bbb0b4368564410ff20b17e53b804eb6c1f04a31be4
+    build:
+      context: .
+      dockerfile: Dockerfile.tailscale
     restart: unless-stopped
     environment:
+      NEKO_TAILNET_IP: ${NEKO_TAILNET_IP:-}
       TS_HOSTNAME: side-by-side-coolify
       TS_USERSPACE: "true"
       TS_AUTH_ONCE: "true"
