@@ -107,8 +107,8 @@ async function evaluateCinema(expression, userGesture = false) {
   });
   return result.result.value;
 }
-async function recordPlaybackError() {
-  const snapshot = await evaluateCinema('window.sideBySideCinema.diagnostics()');
+async function recordPlaybackError(currentSnapshot) {
+  const snapshot = currentSnapshot ?? await evaluateCinema('window.sideBySideCinema.diagnostics()');
   playbackSnapshot = { ...snapshot, observedAt: Date.now() };
   if (!snapshot.error) {
     lastPlaybackError = '';
@@ -361,8 +361,11 @@ const server = createServer(async (req, res) => {
         } else if (action.type === 'expand' || action.type === 'original-audio') {
           message = await prepareCinema();
         } else if (playbackKeys.has(action.type)) {
-          await pressPlayerKey(playbackKeys.get(action.type));
-          await recordPlaybackError();
+          const snapshot = serveLive && !playbackSnapshot?.isAd
+            ? await evaluateCinema('window.sideBySideCinema.control(' + JSON.stringify(action.type) + ')', true)
+            : null;
+          if (!snapshot) await pressPlayerKey(playbackKeys.get(action.type));
+          await recordPlaybackError(snapshot);
         } else {
           res.writeHead(400).end();
           return;

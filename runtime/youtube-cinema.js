@@ -1,5 +1,5 @@
 (() => {
-  if (window.sideBySideCinema?.version === 11) return;
+  if (window.sideBySideCinema?.version === 12) return;
   const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
   function isAdPlaying(player) {
     return Boolean(player?.classList.contains('ad-showing') ||
@@ -44,7 +44,7 @@
   }
 
   window.sideBySideCinema = {
-    version: 11,
+    version: 12,
     readiness(expectedVideoId, contentOnly = false) {
       const requestedId = new URL(location.href).searchParams.get('v');
       if (expectedVideoId && requestedId !== expectedVideoId) return { ready: false };
@@ -109,6 +109,33 @@
           readyState: video?.readyState,
         } : null,
       };
+    },
+    async control(action) {
+      const player = document.querySelector('#movie_player');
+      const video = player?.querySelector('video');
+      if (!video || video.error || isAdPlaying(player)) return null;
+
+      let applied;
+      if (action === 'play') {
+        const shouldPause = !video.paused && !video.ended;
+        const toggle = shouldPause ? player.pauseVideo : player.playVideo;
+        if (typeof toggle !== 'function') return null;
+        toggle.call(player);
+        applied = () => video.paused === shouldPause;
+      } else {
+        if (typeof player.seekTo !== 'function' || !Number.isFinite(video.duration) ||
+            player.getVideoData?.()?.isLive) return null;
+        let position = 0;
+        if (action === 'back') position = video.currentTime - 10;
+        if (action === 'forward') position = video.currentTime + 10;
+        const target = Math.max(0, Math.min(position, video.duration - 0.2));
+        player.seekTo(target, true);
+        applied = () => Math.abs(video.currentTime - target) < 0.3;
+      }
+
+      const deadline = Date.now() + 250;
+      while (!applied() && Date.now() < deadline) await wait(25);
+      return window.sideBySideCinema.diagnostics();
     },
     restorePlayback(position, playing) {
       const player = document.querySelector('#movie_player');
