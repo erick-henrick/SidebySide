@@ -1,3 +1,4 @@
+import { createLiveSource } from './live-source.mjs';
 import { createServer, request } from 'node:http';
 import { connect } from 'node:net';
 import { readFile, appendFile, mkdir } from 'node:fs/promises';
@@ -24,6 +25,8 @@ const nekoPort = Number(process.env.NEKO_HTTP_PORT || runtime.httpPort || 8097);
 const useTailnet = Boolean(process.env.NEKO_TAILNET_IP);
 const nekoHost = useTailnet ? 'tailscale' : (process.env.NEKO_HTTP_HOST || '127.0.0.1');
 const nekoControlUrl = useTailnet ? 'http://tailscale:8765' : process.env.NEKO_CONTROL_URL;
+const hlsOrigin = process.env.CINEMA_HLS_ORIGIN;
+const serveLive = hlsOrigin ? createLiveSource(hlsOrigin, process.env.CONTROL_TOKEN) : null;
 const appPort = Number(process.env.PORT || 3114);
 const appOrigin = new URL(process.env.PUBLIC_ORIGIN || 'http://127.0.0.1:' + appPort).origin;
 const listenHost = process.env.HOST || '127.0.0.1';
@@ -258,6 +261,10 @@ const localFiles = new Map([
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, appOrigin);
   try {
+    if (serveLive && url.pathname.startsWith('/live/')) {
+      await serveLive(req, res, url.pathname);
+      return;
+    }
     if (url.pathname === '/health') {
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify({ status: 'ok' }));
@@ -394,6 +401,10 @@ const server = createServer(async (req, res) => {
     }
     if (url.pathname === '/cinema' || url.pathname === '/sala') {
       let html = await readFile(project + 'cinema.html', 'utf8');
+      if (serveLive) {
+        html = html.replace('<body class="cinema-page">', '<body class="cinema-page" data-hls>');
+        html = html.replace('</head>', '<script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.16/dist/hls.light.min.js" defer></script></head>');
+      }
       html = html.replace('</head>', '<link rel="stylesheet" href="/vr-controls.css"><script src="/proof.js" type="module"></script></head>');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(html);
@@ -404,7 +415,7 @@ const server = createServer(async (req, res) => {
       res.end(await readFile(directory + 'proof.js'));
       return;
     }
-    if (url.pathname === '/vr-controls.js' || url.pathname === '/vr-controls.css' || url.pathname === '/cinema-connection.js') {
+    if (url.pathname === '/vr-controls.js' || url.pathname === '/vr-controls.css' || url.pathname === '/cinema-connection.js' || url.pathname === '/live-cinema.js') {
       const type = url.pathname.endsWith('.js') ? 'text/javascript' : 'text/css';
       res.writeHead(200, { 'Content-Type': type + '; charset=utf-8', 'Cache-Control': 'no-store' });
       res.end(await readFile(directory + url.pathname.slice(1)));

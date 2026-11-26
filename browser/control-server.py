@@ -1,6 +1,9 @@
 import hmac
 import json
 import os
+from pathlib import Path
+import re
+import time
 import subprocess
 import sys
 import urllib.request
@@ -27,6 +30,8 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self):
+        if self.path.startswith("/live/"):
+            return self.live()
         if self.path != "/health":
             return self.reply(404, {"error": "Not found"})
         try:
@@ -39,6 +44,27 @@ class Handler(BaseHTTPRequestHandler):
             self.reply(200, {"status": "ok"})
         except Exception:
             self.reply(503, {"status": "starting"})
+
+    def live(self):
+        name = self.path.removeprefix("/live/")
+        if not re.fullmatch(r"live\.m3u8|chunk-\d+\.ts", name):
+            return self.reply(404, {"error": "Not found"})
+        if not hmac.compare_digest(self.headers.get("Authorization", ""), "Bearer " + TOKEN):
+            return self.reply(401, {"error": "Unauthorized"})
+
+        path = Path("/tmp/cinema-hls") / name
+        try:
+            if name == "live.m3u8" and time.time() - path.stat().st_mtime > 8:
+                return self.reply(503, {"error": "Stream offline"})
+            payload = path.read_bytes()
+        except FileNotFoundError:
+            return self.reply(404, {"error": "Not found"})
+
+        self.send_response(200)
+        self.send_header("Content-Type", "application/vnd.apple.mpegurl" if name == "live.m3u8" else "video/mp2t")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
 
     def do_POST(self):
         if self.path != "/command":

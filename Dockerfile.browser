@@ -14,9 +14,18 @@ WORKDIR /src/server
 RUN go get github.com/pion/ice/v4@v4.2.4 \
     && GIT_COMMIT=395ca1a GIT_TAG=v3.1.5 ./build core
 
-FROM ghcr.io/m1k1o/neko/chromium:3.1.5
+FROM ghcr.io/m1k1o/neko/chromium:3.1.5 AS browser
 COPY --from=neko-build /src/server/bin/neko /usr/bin/neko
 COPY browser/inspect-browser.py browser/control-server.py /opt/cinema/
 COPY browser/neko-policy.json /etc/chromium/policies/managed/policies.json
 RUN sed -i 's#command=/usr/bin/chromium#command=/usr/bin/chromium --remote-debugging-port=9222#' /etc/neko/supervisord/chromium.conf
 COPY browser/cinema-control.conf /etc/neko/supervisord/cinema-control.conf
+
+FROM browser AS browser-hls
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+COPY browser/start-live.sh /opt/cinema/start-live.sh
+COPY browser/cinema-live.conf /etc/neko/supervisord/cinema-live.conf
+
+FROM browser AS production

@@ -1,10 +1,12 @@
+import { connectLiveCinema } from './live-cinema.js';
 import { mountCinemaControls } from './vr-controls.js';
 import { connectCinema } from './cinema-connection.js';
 
 const $ = selector => document.querySelector(selector);
 const media = $('#test-media');
 const status = $('#live-status');
-const connection = connectCinema({ media, screen: $('#screen'), poster: $('#screen-idle'),
+const connect = document.body.hasAttribute('data-hls') ? connectLiveCinema : connectCinema;
+const connection = connect({ media, screen: $('#screen'), poster: $('#screen-idle'),
   join: $('#join-cast'), sound: $('#sound-cast'), status });
 let state = { items: [], history: [], current: null, playback: null, busy: false };
 let pending = 0;
@@ -247,7 +249,7 @@ function paint() {
   $('#playback-progress').setAttribute('aria-valuenow', Math.round(percent));
   $('#playback-progress span').style.width = percent + '%';
   const diagnostics = window.nekoCheck?.();
-  const connected = Boolean(diagnostics?.connected && diagnostics.tracks?.some(track => track.kind === 'video' && track.state === 'live'));
+  const connected = connection.isConnected?.() ?? Boolean(diagnostics?.connected && diagnostics.tracks?.some(track => track.kind === 'video' && track.state === 'live'));
   $('#connection-indicator').dataset.connected = String(connected);
   $('#connection-label').textContent = connected ? 'Na sala' : 'Conectando à sala';
   paintSeats();
