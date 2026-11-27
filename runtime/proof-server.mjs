@@ -1,3 +1,4 @@
+import { createChromiumLab } from './chromium-lab.mjs';
 import { createLiveSource } from './live-source.mjs';
 import { createServer, request } from 'node:http';
 import { connect } from 'node:net';
@@ -29,6 +30,8 @@ const hlsOrigin = process.env.CINEMA_HLS_ORIGIN;
 const serveLive = hlsOrigin ? createLiveSource(hlsOrigin, process.env.CONTROL_TOKEN) : null;
 const appPort = Number(process.env.PORT || 3114);
 const appOrigin = new URL(process.env.PUBLIC_ORIGIN || 'http://127.0.0.1:' + appPort).origin;
+const chromiumLab = process.env.CINEMA_BROWSER_TARGET === 'browser-lab'
+  ? createChromiumLab(appOrigin, process.env.CONTROL_TOKEN) : null;
 const listenHost = process.env.HOST || '127.0.0.1';
 const queue = await createQueue(join(dataDirectory, 'cinema-session.json'));
 let playbackSnapshot = null;
@@ -261,6 +264,10 @@ const localFiles = new Map([
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, appOrigin);
   try {
+    if (chromiumLab && url.pathname.startsWith(chromiumLab.prefix)) {
+      await chromiumLab.handle(req, res, url.pathname);
+      return;
+    }
     if (serveLive && url.pathname.startsWith('/live/')) {
       await serveLive(req, res, url.pathname);
       return;
@@ -451,6 +458,10 @@ const server = createServer(async (req, res) => {
 });
 
 server.on('upgrade', (req, socket, head) => {
+  if (chromiumLab && req.url.startsWith(chromiumLab.prefix)) {
+    chromiumLab.upgrade(req, socket, head);
+    return;
+  }
   if (!req.url.startsWith('/neko/')) { socket.destroy(); return; }
   const upstream = connect(nekoPort, nekoHost, () => {
     let headers = req.method + ' ' + req.url.slice('/neko'.length) + ' HTTP/1.1\r\n';

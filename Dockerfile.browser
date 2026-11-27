@@ -28,4 +28,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg \
 COPY browser/start-live.sh /opt/cinema/start-live.sh
 COPY browser/cinema-live.conf /etc/neko/supervisord/cinema-live.conf
 
+FROM browser-hls AS browser-lab
+RUN apt-get update && apt-get install -y --no-install-recommends x11vnc novnc websockify \
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i 's/autostart=true/autostart=false/' /etc/neko/supervisord/cinema-live.conf
+COPY browser/start-chromium-lab.sh /opt/cinema/start-chromium-lab.sh
+COPY browser/cinema-lab.conf /etc/neko/supervisord/cinema-lab.conf
+
 FROM browser AS production

@@ -13,6 +13,7 @@ services:
       NEKO_HTTP_PORT: "8080"
       NEKO_CONTROL_URL: http://browser:8765
       CINEMA_HLS_ORIGIN: ${CINEMA_HLS_ORIGIN:-}
+      CINEMA_BROWSER_TARGET: ${CINEMA_BROWSER_TARGET:-production}
       CONTROL_TOKEN: ${CONTROL_TOKEN:-${SERVICE_PASSWORD_64_CINEMACONTROL}}
       NEKO_USER_PASSWORD: ${VIEWER_PASSWORD:-${SERVICE_PASSWORD_64_CINEMAVIEWER}}
     volumes:
@@ -30,6 +31,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.browser
+      target: ${CINEMA_BROWSER_TARGET:-production}
     restart: unless-stopped
     shm_size: 1gb
     ports:
